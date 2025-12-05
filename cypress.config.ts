@@ -11,7 +11,8 @@ export default defineConfig({
   },
   e2e: {
     baseUrl: 'http://localhost:3001',
-    setupNodeEvents(on, config) {
+    setupNodeEvents(on) {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       require('cypress-mochawesome-reporter/plugin')(on);
     },
   },

@@ -18,6 +18,7 @@ import {
   MenuItem,
   Box,
   Stack,
+  TablePagination,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -43,6 +44,18 @@ export default function Todos() {
   const [filterTitle, setFilterTitle] = useState('');
   const [filterStatus, setFilterStatus] = useState('ALL');
   const [filterDate, setFilterDate] = useState('');
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const filteredTodos = todos.filter((todo) => {
     const matchesTitle = todo.title.toLowerCase().includes(filterTitle.toLowerCase());
@@ -106,14 +119,14 @@ export default function Todos() {
             label="Filter by Name"
             variant="outlined"
             value={filterTitle}
-            onChange={(e) => setFilterTitle(e.target.value)}
+            onChange={(e) => { setFilterTitle(e.target.value); setPage(0); }}
             size="small"
           />
           <TextField
             select
             label="Filter by Status"
             value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
+            onChange={(e) => { setFilterStatus(e.target.value); setPage(0); }}
             size="small"
             sx={{ minWidth: 150 }}
           >
@@ -127,7 +140,7 @@ export default function Todos() {
             label="Filter by Date"
             type="date"
             value={filterDate}
-            onChange={(e) => setFilterDate(e.target.value)}
+            onChange={(e) => { setFilterDate(e.target.value); setPage(0); }}
             size="small"
             InputLabelProps={{
               shrink: true,
@@ -148,7 +161,9 @@ export default function Todos() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredTodos.map((todo) => (
+            {filteredTodos
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((todo) => (
               <TableRow
                 key={todo.id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -185,6 +200,15 @@ export default function Todos() {
           </TableBody>
         </Table>
       </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={filteredTodos.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
       <TodoModal
         open={isModalOpen}
         onClose={() => { setIsModalOpen(false); setEditTodo(undefined); }}
