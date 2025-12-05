@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
-import { Box, Card, CardContent, Typography, Chip, IconButton } from '@mui/material';
+import { Box, Card, CardContent, Typography, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import api from '../lib/axios';
 import TodoModal from './TodoModal';
@@ -18,6 +18,13 @@ const columns = {
   PENDING: 'Pending',
   IN_PROGRESS: 'In Progress',
   COMPLETED: 'Completed',
+};
+
+const columnColors: Record<string, string> = {
+  BACKLOG: '#757575', // Grey
+  PENDING: '#ff9800', // Orange
+  IN_PROGRESS: '#03a9f4', // Light Blue
+  COMPLETED: '#4caf50', // Green
 };
 
 const KanbanBoard = () => {
@@ -125,7 +132,8 @@ const KanbanBoard = () => {
       flexDirection: { xs: 'column', md: 'row' },
       overflowX: { xs: 'hidden', md: 'auto' },
       height: { xs: 'auto', md: '100%' },
-      gap: 2 
+      gap: 2,
+      p: 2
     }}>
       <DragDropContext onDragEnd={onDragEnd}>
         {Object.entries(columns).map(([columnId, columnTitle]) => (
@@ -133,23 +141,48 @@ const KanbanBoard = () => {
             minWidth: { xs: '100%', md: 300 }, 
             width: { xs: '100%', md: 300 }, 
             display: 'flex', 
-            flexDirection: 'column' 
+            flexDirection: 'column',
+            border: '1px solid',
+            borderColor: 'divider',
+            borderRadius: 2,
+            bgcolor: 'background.paper'
           }}>
-            <Typography variant="h6" sx={{ mb: 2, textAlign: 'center', fontWeight: 'bold' }}>
-              {columnTitle}
-            </Typography>
+            <Box sx={{ 
+                p: 2, 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center',
+                borderBottom: '1px solid',
+                borderColor: 'divider'
+            }}>
+                <Typography variant="h6" sx={{ fontWeight: 'bold', textTransform: 'uppercase', fontSize: '1rem' }}>
+                  {columnTitle}
+                </Typography>
+                <Box sx={{ 
+                    bgcolor: columnColors[columnId], 
+                    color: 'white', 
+                    borderRadius: '50%', 
+                    width: 24, 
+                    height: 24, 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    fontSize: '0.75rem',
+                    fontWeight: 'bold'
+                }}>
+                    {columnsData[columnId].length}
+                </Box>
+            </Box>
+
             <Droppable droppableId={columnId}>
               {(provided) => (
                 <Box
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                   sx={{
-                    bgcolor: 'background.paper',
                     p: 2,
-                    borderRadius: 2,
-                    minHeight: { xs: 100, md: 500 },
                     flexGrow: 1,
-                    boxShadow: 1,
+                    minHeight: { xs: 100, md: 500 },
                   }}
                 >
                   {columnsData[columnId].map((todo, index) => (
@@ -161,27 +194,31 @@ const KanbanBoard = () => {
                           {...provided.dragHandleProps}
                           sx={{
                             mb: 2,
-                            bgcolor: snapshot.isDragging ? 'action.hover' : 'background.default',
+                            bgcolor: snapshot.isDragging ? 'action.hover' : '#1e1e1e',
+                            color: 'white',
                             ...provided.draggableProps.style,
                           }}
                         >
-                          <CardContent>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                <Typography variant="subtitle1" gutterBottom>
+                          <CardContent sx={{ '&:last-child': { pb: 2 } }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+                                <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
                                 {todo.title}
                                 </Typography>
-                                <IconButton size="small" onClick={() => handleEdit(todo)}>
+                                <IconButton size="small" onClick={() => handleEdit(todo)} sx={{ color: 'white' }}>
                                     <EditIcon fontSize="small" />
                                 </IconButton>
                             </Box>
                             
+                            {todo.description && (
+                                <Typography variant="body2" sx={{ color: 'grey.500', mb: 2, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                                    {todo.description}
+                                </Typography>
+                            )}
+
                             {todo.dueTime && (
-                              <Chip
-                                label={new Date(todo.dueTime).toLocaleDateString()}
-                                size="small"
-                                color={new Date(todo.dueTime) < new Date() && todo.status !== 'COMPLETED' ? 'error' : 'default'}
-                                sx={{ mt: 1 }}
-                              />
+                                <Typography variant="caption" sx={{ color: 'grey.500' }}>
+                                    Due: {new Date(todo.dueTime).toLocaleDateString()}
+                                </Typography>
                             )}
                           </CardContent>
                         </Card>
