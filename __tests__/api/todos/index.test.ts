@@ -1,19 +1,20 @@
 import { expect, describe, it, beforeEach } from '@jest/globals';
 import { createMocks } from 'node-mocks-http';
-import handler from '../index';
-import { isAuthenticated } from '../../../../lib/auth';
-import { getORM } from '../../../../lib/db';
+import handler from '../../../pages/api/todos/index';
+import { isAuthenticated } from '../../../lib/auth';
+import { getORM } from '../../../lib/db';
+import { ObjectId } from '@mikro-orm/mongodb';
 
-jest.mock('../../../../lib/auth');
-jest.mock('../../../../lib/db', () => ({
+jest.mock('../../../lib/auth');
+jest.mock('../../../lib/db', () => ({
   getORM: jest.fn(),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   withORM: (handler: any) => handler,
 }));
-jest.mock('../../../../entities/Todo', () => ({
+jest.mock('../../../entities/Todo', () => ({
   Todo: class {},
 }));
-jest.mock('../../../../entities/User', () => ({
+jest.mock('../../../entities/User', () => ({
   User: class {},
 }));
 
@@ -27,6 +28,8 @@ describe('/api/todos', () => {
     persistAndFlush: mockPersistAndFlush,
   }));
 
+  const validUserId = '507f1f77bcf86cd799439011';
+
   beforeEach(() => {
     jest.clearAllMocks();
     (getORM as jest.Mock).mockResolvedValue({
@@ -34,7 +37,7 @@ describe('/api/todos', () => {
         fork: mockFork,
       },
     });
-    (isAuthenticated as jest.Mock).mockReturnValue({ userId: 'user1' });
+    (isAuthenticated as jest.Mock).mockReturnValue({ userId: validUserId });
   });
 
   it('GET returns todos', async () => {
@@ -48,7 +51,13 @@ describe('/api/todos', () => {
 
     expect(res._getStatusCode()).toBe(200);
     expect(JSON.parse(res._getData())).toEqual([{ id: '1', title: 'Test Todo' }]);
-    expect(mockFind).toHaveBeenCalledWith(expect.anything(), { owner: 'user1' }, { orderBy: { createdAt: 'DESC' } });
+    
+    // Verify it was called with ObjectId
+    expect(mockFind).toHaveBeenCalledWith(
+      expect.anything(), 
+      { owner: expect.any(ObjectId) }, 
+      { orderBy: { createdAt: 'DESC' } }
+    );
   });
 
   it('POST creates a todo', async () => {
@@ -61,7 +70,7 @@ describe('/api/todos', () => {
       },
     });
 
-    mockFindOne.mockResolvedValue({ id: 'user1' }); // Mock User found
+    mockFindOne.mockResolvedValue({ id: validUserId }); // Mock User found
 
     await handler(req, res);
 
@@ -77,16 +86,5 @@ describe('/api/todos', () => {
     });
 
     await handler(req, res);
-
-    // isAuthenticated handles the response in the real implementation?
-    // Let's check isAuthenticated implementation.
-    // If it returns null, the handler returns undefined (void).
-    // But isAuthenticated usually sends 401.
-    // Wait, the handler code says:
-    // const userPayload = isAuthenticated(req, res);
-    // if (!userPayload) return;
-    
-    // So if isAuthenticated returns null, the handler stops.
-    // We need to ensure isAuthenticated sends the response if it fails.
   });
 });

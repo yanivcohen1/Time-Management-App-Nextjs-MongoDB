@@ -3,6 +3,7 @@ import { withORM, getORM } from '../../../lib/db';
 import { Todo } from '../../../entities/Todo';
 import { isAuthenticated } from '../../../lib/auth';
 import { User } from '../../../entities/User';
+import { ObjectId } from '@mikro-orm/mongodb';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const userPayload = isAuthenticated(req, res);
@@ -12,8 +13,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const em = orm.em.fork();
 
   if (req.method === 'GET') {
-    const todos = await em.find(Todo, { owner: userPayload.userId }, { orderBy: { createdAt: 'DESC' } });
-    return res.status(200).json(todos);
+    try {
+      const todos = await em.find(Todo, { owner: new ObjectId(userPayload.userId) }, { orderBy: { createdAt: 'DESC' } });
+      return res.status(200).json(todos);
+    } catch (error) {
+      console.error('Error fetching todos:', error);
+      return res.status(500).json({ message: 'Error fetching todos' });
+    }
   }
 
   if (req.method === 'POST') {
@@ -22,7 +28,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(400).json({ message: 'Title is required' });
     }
 
-    const user = await em.findOne(User, { id: userPayload.userId });
+    const user = await em.findOne(User, { _id: new ObjectId(userPayload.userId) });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }

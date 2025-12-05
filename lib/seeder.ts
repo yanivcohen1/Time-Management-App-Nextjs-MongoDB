@@ -38,6 +38,9 @@ export const seedDatabase = async (em: EntityManager) => {
     new Todo('Demo Pending', user),
     new Todo('Demo In Progress', user),
     new Todo('Demo Completed', user),
+    // Admin Todos
+    new Todo('Admin Task 1', admin),
+    new Todo('Admin Task 2', admin),
   ];
   todos[0].status = TodoStatus.PENDING;
   todos[0].dueTime = new Date(Date.now() + 86400000); // Tomorrow
@@ -51,6 +54,9 @@ export const seedDatabase = async (em: EntityManager) => {
   todos[4].status = TodoStatus.PENDING;
   todos[5].status = TodoStatus.IN_PROGRESS;
   todos[6].status = TodoStatus.COMPLETED;
+
+  todos[7].status = TodoStatus.PENDING;
+  todos[8].status = TodoStatus.IN_PROGRESS;
 
   em.persist(todos);
 
