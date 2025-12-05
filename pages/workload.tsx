@@ -69,7 +69,12 @@ export default function Workload() {
                   />
                   <Chip 
                     label={todo.status} 
-                    color={todo.status === 'COMPLETED' ? 'success' : 'default'} 
+                    color={
+                      todo.status === 'COMPLETED' ? 'success' :
+                      todo.status === 'IN_PROGRESS' ? 'info' :
+                      todo.status === 'PENDING' ? 'warning' :
+                      'default'
+                    }
                     size="small" 
                   />
                 </ListItem>
