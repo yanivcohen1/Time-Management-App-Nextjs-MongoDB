@@ -131,21 +131,22 @@ const KanbanBoard = () => {
       display: 'flex', 
       flexDirection: { xs: 'column', md: 'row' },
       overflowX: { xs: 'hidden', md: 'auto' },
-      height: { xs: 'auto', md: '100%' },
+      height: { xs: 'auto', md: 'calc(100vh - 140px)' },
       gap: 2,
       p: 2
     }}>
       <DragDropContext onDragEnd={onDragEnd}>
         {Object.entries(columns).map(([columnId, columnTitle]) => (
           <Box key={columnId} sx={{ 
-            minWidth: { xs: '100%', md: 300 }, 
-            width: { xs: '100%', md: 300 }, 
+            width: { xs: '100%', md: 'auto' },
+            flex: { md: 1 },
             display: 'flex', 
             flexDirection: 'column',
             border: '1px solid',
             borderColor: 'divider',
             borderRadius: 2,
-            bgcolor: 'background.paper'
+            bgcolor: 'background.paper',
+            maxHeight: '100%'
           }}>
             <Box sx={{ 
                 p: 2, 
@@ -182,7 +183,8 @@ const KanbanBoard = () => {
                   sx={{
                     p: 2,
                     flexGrow: 1,
-                    minHeight: { xs: 100, md: 500 },
+                    minHeight: 100,
+                    overflowY: 'auto'
                   }}
                 >
                   {columnsData[columnId].map((todo, index) => (
