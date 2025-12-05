@@ -14,6 +14,10 @@ import {
   TableRow,
   IconButton,
   Chip,
+  TextField,
+  MenuItem,
+  Box,
+  Stack,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -35,6 +39,17 @@ export default function Todos() {
   const [editTodo, setEditTodo] = useState<Todo | undefined>(undefined);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+
+  const [filterTitle, setFilterTitle] = useState('');
+  const [filterStatus, setFilterStatus] = useState('ALL');
+  const [filterDate, setFilterDate] = useState('');
+
+  const filteredTodos = todos.filter((todo) => {
+    const matchesTitle = todo.title.toLowerCase().includes(filterTitle.toLowerCase());
+    const matchesStatus = filterStatus && filterStatus !== 'ALL' ? todo.status === filterStatus : true;
+    const matchesDate = filterDate ? (todo.dueTime && new Date(todo.dueTime).toISOString().startsWith(filterDate)) : true;
+    return matchesTitle && matchesStatus && matchesDate;
+  });
 
   const fetchTodos = async () => {
     try {
@@ -84,6 +99,43 @@ export default function Todos() {
       <Typography variant="h4" gutterBottom>
         Track Status
       </Typography>
+
+      <Box sx={{ mb: 3 }}>
+        <Stack direction="row" spacing={2}>
+          <TextField
+            label="Filter by Name"
+            variant="outlined"
+            value={filterTitle}
+            onChange={(e) => setFilterTitle(e.target.value)}
+            size="small"
+          />
+          <TextField
+            select
+            label="Filter by Status"
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            size="small"
+            sx={{ minWidth: 150 }}
+          >
+            <MenuItem value="ALL">All Statuses</MenuItem>
+            <MenuItem value="BACKLOG">Backlog</MenuItem>
+            <MenuItem value="PENDING">Pending</MenuItem>
+            <MenuItem value="IN_PROGRESS">In Progress</MenuItem>
+            <MenuItem value="COMPLETED">Completed</MenuItem>
+          </TextField>
+          <TextField
+            label="Filter by Date"
+            type="date"
+            value={filterDate}
+            onChange={(e) => setFilterDate(e.target.value)}
+            size="small"
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+        </Stack>
+      </Box>
+
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -96,7 +148,7 @@ export default function Todos() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {todos.map((todo) => (
+            {filteredTodos.map((todo) => (
               <TableRow
                 key={todo.id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
