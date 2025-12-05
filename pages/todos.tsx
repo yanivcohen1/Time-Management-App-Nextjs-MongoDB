@@ -19,6 +19,8 @@ import {
   Box,
   Stack,
   TablePagination,
+  Popover,
+  Button,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -98,16 +100,30 @@ export default function Todos() {
     }
   }, [user]);
 
-  const handleDelete = async (id: string) => {
-    if (confirm('Are you sure you want to delete this todo?')) {
+  const [deleteAnchorEl, setDeleteAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+
+  const handleOpenDeletePopover = (event: React.MouseEvent<HTMLButtonElement>, id: string) => {
+    setDeleteAnchorEl(event.currentTarget);
+    setDeleteId(id);
+  };
+
+  const handleCloseDeletePopover = () => {
+    setDeleteAnchorEl(null);
+    setDeleteId(null);
+  };
+
+  const confirmDelete = async () => {
+    if (deleteId) {
       try {
-        await api.delete(`/todos/${id}`);
+        await api.delete(`/todos/${deleteId}`);
         enqueueSnackbar('Todo deleted', { variant: 'success' });
         fetchTodos();
       } catch {
         // Handled by interceptor
       }
     }
+    handleCloseDeletePopover();
   };
 
   const handleEdit = (todo: Todo) => {
@@ -213,7 +229,7 @@ export default function Todos() {
                   <IconButton onClick={() => handleEdit(todo)}>
                     <EditIcon />
                   </IconButton>
-                  <IconButton onClick={() => handleDelete(todo.id)} color="error">
+                  <IconButton onClick={(e) => handleOpenDeletePopover(e, todo.id)} color="error">
                     <DeleteIcon />
                   </IconButton>
                 </TableCell>
@@ -237,6 +253,27 @@ export default function Todos() {
         todo={editTodo}
         onSuccess={fetchTodos}
       />
+      <Popover
+        open={Boolean(deleteAnchorEl)}
+        anchorEl={deleteAnchorEl}
+        onClose={handleCloseDeletePopover}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <Box sx={{ p: 2 }}>
+          <Typography sx={{ mb: 2 }}>Are you sure you want to delete this todo?</Typography>
+          <Stack direction="row" spacing={2} justifyContent="flex-end">
+            <Button onClick={handleCloseDeletePopover} size="small">Cancel</Button>
+            <Button onClick={confirmDelete} color="error" variant="contained" size="small">Delete</Button>
+          </Stack>
+        </Box>
+      </Popover>
     </Layout>
   );
 }
