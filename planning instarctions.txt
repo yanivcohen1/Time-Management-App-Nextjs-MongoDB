@@ -1,22 +1,17 @@
 create todo app in nextjs and ts that include 'due time' and status: ["BACKLOG", "PENDING", "IN_PROGRESS", "COMPLETED"] also side menu with main menu "Main status board" that include 'Dates by workload' todo menu "Track status" create delete and agile menu with 4 coloms for each status with drag and drop
 also add login logout and role user and admin
 the db will be mongodb with MikroORM also used Material UI for gui and Cypress for e2e
-the app will be responsive with dark/light and in mobile the sidebar will be on z-index the scurity will be jwt tat inject by Axios response also the Axios will show react-top-loading-bar in reqests and also will be show errors on snackbar
+the app will be responsive with dark/light and in mobile the sidebar will be on z-index the scurity will be jwt tat inject by Axios reqest also the Axios will show react-top-loading-bar in reqests and also will be show errors on snackbar
 and also will inject in respones the autorizetion haeder for jwt
 and also create .env.development and .env.production for DATABASE_URL, JWT_ACCESS_SECRET, JWT_ACCESS_TTL_SECONDS, SEED_DEMO_PASSWORD=ChangeMe123!
 SEED_ADMIN_EMAIL=admin@todo.dev
 SEED_ADMIN_NAME=Demo Admin
 SEED_USER_EMAIL=user@todo.dev
 SEED_USER_NAME=Demo User
-
 and also add seed data user and todo for the demo and also add in login two buttons for demo user login and admin user login
-
 used main domain color that all pages will be share buttons menus loading-bar
-
 mongodb name will be next-todo-app
-
 used pnpm to all node operations
-
 add units tests and e2e tests
 -----------------------------------------
 

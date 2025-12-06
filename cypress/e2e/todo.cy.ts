@@ -1,4 +1,4 @@
-describe('Todo App', () => {
+describe('Agile Tasks', () => {
   beforeEach(() => {
     // Seed the database
     cy.request('POST', '/api/auth/seed');

@@ -4,7 +4,7 @@ export default defineConfig({
   reporter: 'cypress-mochawesome-reporter',
   reporterOptions: {
     charts: true,
-    reportPageTitle: 'Todo App E2E Test Report',
+    reportPageTitle: 'Agile Tasks E2E Test Report',
     embeddedScreenshots: true,
     inlineAssets: true,
     saveAllAttempts: false,

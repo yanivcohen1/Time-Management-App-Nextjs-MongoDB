@@ -26,6 +26,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ViewKanbanIcon from '@mui/icons-material/ViewKanban';
 import LogoutIcon from '@mui/icons-material/Logout';
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import { useThemeContext } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 import { useRouter } from 'next/router';
@@ -71,9 +72,12 @@ export default function Layout({ children }: LayoutProps) {
   const drawer = (
     <div>
       <Toolbar>
-        <Typography variant="h6" noWrap component="div">
-          Todo App
-        </Typography>
+        <Box display="flex" alignItems="center" gap={1}>
+          <TaskAltIcon color="primary" />
+          <Typography variant="h6" noWrap component="div">
+            Agile Tasks
+          </Typography>
+        </Box>
       </Toolbar>
       <Divider />
       <List>
@@ -168,7 +172,7 @@ export default function Layout({ children }: LayoutProps) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            {user ? `Welcome, ${user.name}` : 'Todo App'}
+            {user ? `Welcome, ${user.name}` : 'Agile Tasks'}
           </Typography>
           <IconButton sx={{ ml: 1 }} onClick={toggleColorMode} color="inherit">
             {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}

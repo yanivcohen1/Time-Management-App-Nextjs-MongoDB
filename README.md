@@ -1,6 +1,6 @@
-# Todo App
+# Agile Tasks
 
-A full-stack Todo application built with Next.js, MikroORM, MongoDB, and Material UI.
+A full-stack Agile Tasks application built with Next.js, MikroORM, MongoDB, and Material UI.
 
 ## Technologies Used
 
