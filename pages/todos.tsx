@@ -204,7 +204,12 @@ export default function Todos() {
               .map((todo) => (
               <TableRow
                 key={todo.id}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                sx={{ 
+                  '&:last-child td, &:last-child th': { border: 0 },
+                  '&:nth-of-type(odd)': {
+                    backgroundColor: (theme) => theme.palette.mode === 'light' ? '#e0e0e0' : theme.palette.action.hover,
+                  },
+                }}
               >
                 <TableCell component="th" scope="row">
                   {todo.title}
