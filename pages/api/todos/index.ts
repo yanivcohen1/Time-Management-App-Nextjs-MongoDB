@@ -16,7 +16,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
     try {
       const filter: FilterQuery<Todo> = {};
-      const { userId, status, title, startDate, endDate } = req.query;
+      const { userId, status, title, startDate, endDate, page, limit, orderBy, order } = req.query;
+
+      const pageNum = page ? parseInt(page as string, 10) : 0;
+      const limitNum = limit ? parseInt(limit as string, 10) : 10;
+      const offset = pageNum * limitNum;
 
       if (userPayload.role === 'admin') {
         if (userId && typeof userId === 'string') {
@@ -49,8 +53,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         filter.dueTime = dateFilter;
       }
 
-      const todos = await em.find(Todo, filter, { orderBy: { createdAt: 'DESC' } });
-      return res.status(200).json(todos);
+      const sortOrder = order === 'desc' ? 'DESC' : 'ASC';
+      const sortField = orderBy && typeof orderBy === 'string' ? orderBy : 'createdAt';
+
+      const [todos, count] = await em.findAndCount(Todo, filter, { 
+        orderBy: { [sortField]: sortOrder },
+        limit: limitNum,
+        offset: offset
+      });
+      
+      return res.status(200).json({ items: todos, total: count });
     } catch (error) {
       console.error('Error fetching todos:', error);
       return res.status(500).json({ message: 'Error fetching todos' });

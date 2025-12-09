@@ -20,10 +20,12 @@ jest.mock('../../../entities/User', () => ({
 
 describe('/api/todos', () => {
   const mockFind = jest.fn();
+  const mockFindAndCount = jest.fn();
   const mockFindOne = jest.fn();
   const mockPersistAndFlush = jest.fn();
   const mockFork = jest.fn(() => ({
     find: mockFind,
+    findAndCount: mockFindAndCount,
     findOne: mockFindOne,
     persistAndFlush: mockPersistAndFlush,
   }));
@@ -45,18 +47,18 @@ describe('/api/todos', () => {
       method: 'GET',
     });
 
-    mockFind.mockResolvedValue([{ id: '1', title: 'Test Todo' }]);
+    mockFindAndCount.mockResolvedValue([[{ id: '1', title: 'Test Todo' }], 1]);
 
     await handler(req, res);
 
     expect(res._getStatusCode()).toBe(200);
-    expect(JSON.parse(res._getData())).toEqual([{ id: '1', title: 'Test Todo' }]);
+    expect(JSON.parse(res._getData())).toEqual({ items: [{ id: '1', title: 'Test Todo' }], total: 1 });
     
     // Verify it was called with ObjectId
-    expect(mockFind).toHaveBeenCalledWith(
+    expect(mockFindAndCount).toHaveBeenCalledWith(
       expect.anything(), 
       { owner: expect.any(ObjectId) }, 
-      { orderBy: { createdAt: 'DESC' } }
+      expect.objectContaining({ orderBy: { createdAt: 'ASC' }, limit: 10, offset: 0 })
     );
   });
 
@@ -94,15 +96,15 @@ describe('/api/todos', () => {
       method: 'GET',
     });
 
-    mockFind.mockResolvedValue([{ id: '1', title: 'Test Todo' }]);
+    mockFindAndCount.mockResolvedValue([[{ id: '1', title: 'Test Todo' }], 1]);
 
     await handler(req, res);
 
     expect(res._getStatusCode()).toBe(200);
-    expect(mockFind).toHaveBeenCalledWith(
+    expect(mockFindAndCount).toHaveBeenCalledWith(
       expect.anything(), 
       {}, 
-      { orderBy: { createdAt: 'DESC' } }
+      expect.objectContaining({ orderBy: { createdAt: 'ASC' }, limit: 10, offset: 0 })
     );
   });
 });

@@ -39,8 +39,8 @@ export default function Workload() {
 
   useEffect(() => {
     if (user) {
-      const params = selectedUserId ? { userId: selectedUserId } : {};
-      api.get('/todos', { params }).then((res) => setTodos(res.data)).catch(() => {});
+      const params = selectedUserId ? { userId: selectedUserId, limit: 1000 } : { limit: 1000 };
+      api.get('/todos', { params }).then((res) => setTodos(res.data.items)).catch(() => {});
     }
   }, [user, selectedUserId]);
 

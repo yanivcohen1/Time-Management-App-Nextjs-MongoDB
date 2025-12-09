@@ -40,6 +40,7 @@ export default function Todos() {
   const { user, loading, selectedUserId } = useAuth();
   const router = useRouter();
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [total, setTotal] = useState(0);
   const [editTodo, setEditTodo] = useState<Todo | undefined>(undefined);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
@@ -70,22 +71,7 @@ export default function Todos() {
     setPage(0);
   };
 
-  const filteredTodos = todos;
-
-  const sortedTodos = React.useMemo(() => {
-    return [...filteredTodos].sort((a, b) => {
-      const aValue = a[orderBy] || '';
-      const bValue = b[orderBy] || '';
-
-      if (bValue < aValue) {
-        return order === 'desc' ? -1 : 1;
-      }
-      if (bValue > aValue) {
-        return order === 'desc' ? 1 : -1;
-      }
-      return 0;
-    });
-  }, [filteredTodos, order, orderBy]);
+  const sortedTodos = todos;
 
   const fetchTodos = React.useCallback(async () => {
     try {
@@ -105,12 +91,18 @@ export default function Todos() {
       if (filterEndDate) {
         params.endDate = filterEndDate;
       }
+      params.page = page.toString();
+      params.limit = rowsPerPage.toString();
+      params.orderBy = orderBy;
+      params.order = order;
+
       const res = await api.get('/todos', { params });
-      setTodos(res.data);
+      setTodos(res.data.items);
+      setTotal(res.data.total);
     } catch (error) {
       console.error(error);
     }
-  }, [selectedUserId, filterStatus, filterTitle, filterStartDate, filterEndDate]);
+  }, [selectedUserId, filterStatus, filterTitle, filterStartDate, filterEndDate, page, rowsPerPage, orderBy, order]);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -257,7 +249,6 @@ export default function Todos() {
           </TableHead>
           <TableBody>
             {sortedTodos
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((todo) => (
               <TableRow
                 key={todo.id}
@@ -303,7 +294,7 @@ export default function Todos() {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={filteredTodos.length}
+        count={total}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

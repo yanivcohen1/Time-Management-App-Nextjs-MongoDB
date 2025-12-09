@@ -42,9 +42,9 @@ const KanbanBoard = () => {
 
   const fetchTodos = React.useCallback(async () => {
     try {
-      const params = selectedUserId ? { userId: selectedUserId } : {};
+      const params = selectedUserId ? { userId: selectedUserId, limit: 1000 } : { limit: 1000 };
       const res = await api.get('/todos', { params });
-      setTodos(res.data);
+      setTodos(res.data.items);
     } catch (error) {
       console.error(error);
     }
