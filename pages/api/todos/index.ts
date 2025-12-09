@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { withORM, getORM } from '../../../lib/db';
-import { Todo } from '../../../entities/Todo';
+import { Todo, TodoStatus } from '../../../entities/Todo';
 import { isAuthenticated } from '../../../lib/auth';
 import { User } from '../../../entities/User';
 import { ObjectId } from '@mikro-orm/mongodb';
@@ -16,14 +16,39 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
     try {
       const filter: FilterQuery<Todo> = {};
+      const { userId, status, title, startDate, endDate } = req.query;
+
       if (userPayload.role === 'admin') {
-        const { userId } = req.query;
         if (userId && typeof userId === 'string') {
           filter.owner = new ObjectId(userId);
         }
       } else {
         filter.owner = new ObjectId(userPayload.userId);
       }
+
+      if (status && typeof status === 'string' && status !== 'ALL') {
+        if (Object.values(TodoStatus).includes(status as TodoStatus)) {
+            filter.status = status as TodoStatus;
+        }
+      }
+
+      if (title && typeof title === 'string') {
+        filter.title = new RegExp(title, 'i');
+      }
+
+      if ((startDate && typeof startDate === 'string') || (endDate && typeof endDate === 'string')) {
+        const dateFilter: any = {};
+        if (startDate && typeof startDate === 'string') {
+           dateFilter.$gte = new Date(startDate);
+        }
+        if (endDate && typeof endDate === 'string') {
+           const end = new Date(endDate);
+           end.setHours(23, 59, 59, 999);
+           dateFilter.$lte = end;
+        }
+        filter.dueTime = dateFilter;
+      }
+
       const todos = await em.find(Todo, filter, { orderBy: { createdAt: 'DESC' } });
       return res.status(200).json(todos);
     } catch (error) {

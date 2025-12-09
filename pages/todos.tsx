@@ -70,23 +70,7 @@ export default function Todos() {
     setPage(0);
   };
 
-  const filteredTodos = todos.filter((todo) => {
-    const matchesTitle = todo.title.toLowerCase().includes(filterTitle.toLowerCase());
-    const matchesStatus = filterStatus && filterStatus !== 'ALL' ? todo.status === filterStatus : true;
-    
-    let matchesDate = true;
-    if (filterStartDate || filterEndDate) {
-      if (!todo.dueTime) {
-        matchesDate = false;
-      } else {
-        const todoDate = new Date(todo.dueTime).toISOString().split('T')[0];
-        if (filterStartDate && todoDate < filterStartDate) matchesDate = false;
-        if (filterEndDate && todoDate > filterEndDate) matchesDate = false;
-      }
-    }
-
-    return matchesTitle && matchesStatus && matchesDate;
-  });
+  const filteredTodos = todos;
 
   const sortedTodos = React.useMemo(() => {
     return [...filteredTodos].sort((a, b) => {
@@ -105,13 +89,28 @@ export default function Todos() {
 
   const fetchTodos = React.useCallback(async () => {
     try {
-      const params = selectedUserId ? { userId: selectedUserId } : {};
+      const params: Record<string, string> = {};
+      if (selectedUserId) {
+        params.userId = selectedUserId;
+      }
+      if (filterStatus && filterStatus !== 'ALL') {
+        params.status = filterStatus;
+      }
+      if (filterTitle) {
+        params.title = filterTitle;
+      }
+      if (filterStartDate) {
+        params.startDate = filterStartDate;
+      }
+      if (filterEndDate) {
+        params.endDate = filterEndDate;
+      }
       const res = await api.get('/todos', { params });
       setTodos(res.data);
     } catch (error) {
       console.error(error);
     }
-  }, [selectedUserId]);
+  }, [selectedUserId, filterStatus, filterTitle, filterStartDate, filterEndDate]);
 
   useEffect(() => {
     if (!loading && !user) {
