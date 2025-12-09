@@ -127,7 +127,7 @@ const KanbanBoard = () => {
       display: 'flex', 
       flexDirection: { xs: 'column', md: 'row' },
       overflowX: { xs: 'hidden', md: 'auto' },
-      height: { xs: 'auto', md: 'calc(100vh - 140px)' },
+      height: { xs: 'auto', md: 'calc(100vh - 190px)' },
       gap: 2,
       p: 2
     }}>
