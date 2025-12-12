@@ -45,40 +45,40 @@ export const seedDatabase = async (em: EntityManager) => {
   todos[0].status = TodoStatus.PENDING;
   todos[0].dueTime = new Date(Date.now() + 86400000); // Tomorrow
   todos[0].description = 'Buy milk, eggs, and bread from the supermarket.';
-  todos[0].duration = 60;
+  todos[0].duration = 1;
   
   todos[1].status = TodoStatus.IN_PROGRESS;
   todos[1].dueTime = new Date(Date.now() - 86400000); // Yesterday (Overdue)
   todos[1].description = 'Take the dog for a walk in the park.';
-  todos[1].duration = 30;
+  todos[1].duration = 0.5;
 
   todos[2].status = TodoStatus.COMPLETED;
   todos[2].description = 'Complete the final report for the project.';
-  todos[2].duration = 120;
+  todos[2].duration = 2;
 
   todos[3].status = TodoStatus.BACKLOG;
   todos[3].description = 'This is a backlog item for demonstration purposes.';
-  todos[3].duration = 15;
+  todos[3].duration = 0.25;
 
   todos[4].status = TodoStatus.PENDING;
   todos[4].description = 'This is a pending item for demonstration purposes.';
-  todos[4].duration = 45;
+  todos[4].duration = 0.75;
 
   todos[5].status = TodoStatus.IN_PROGRESS;
   todos[5].description = 'This is an in-progress item for demonstration purposes.';
-  todos[5].duration = 90;
+  todos[5].duration = 1.5;
 
   todos[6].status = TodoStatus.COMPLETED;
   todos[6].description = 'This is a completed item for demonstration purposes.';
-  todos[6].duration = 20;
+  todos[6].duration = 0.5;
 
   todos[7].status = TodoStatus.PENDING;
   todos[7].description = 'Review system logs and monitor performance.';
-  todos[7].duration = 60;
+  todos[7].duration = 1;
 
   todos[8].status = TodoStatus.IN_PROGRESS;
   todos[8].description = 'Update user permissions and roles.';
-  todos[8].duration = 30;
+  todos[8].duration = 0.5;
 
   em.persist(todos);
 

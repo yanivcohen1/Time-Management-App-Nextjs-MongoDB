@@ -289,7 +289,7 @@ export default function Todos() {
                   {todo.dueTime ? new Date(todo.dueTime).toLocaleDateString() : '-'}
                 </TableCell>
                 <TableCell>
-                  {todo.duration ? `${todo.duration} mins` : '-'}
+                  {todo.duration ? `${todo.duration} hours` : '-'}
                 </TableCell>
                 <TableCell align="right">
                   <IconButton onClick={() => handleEdit(todo)}>

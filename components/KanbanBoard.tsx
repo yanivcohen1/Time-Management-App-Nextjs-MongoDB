@@ -221,7 +221,7 @@ const KanbanBoard = () => {
                             )}
                             {todo.duration && (
                                 <Typography variant="caption" sx={{ color: 'grey.500', display: 'block' }}>
-                                    Duration: {todo.duration} mins
+                                    Duration: {todo.duration} hours
                                 </Typography>
                             )}
                           </CardContent>

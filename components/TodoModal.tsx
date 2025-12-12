@@ -127,7 +127,7 @@ const TodoModal = ({ open, onClose, todo, onSuccess }: TodoModalProps) => {
         />
         <TextField
           margin="dense"
-          label="Duration (minutes)"
+          label="Duration (hours)"
           type="number"
           fullWidth
           value={duration}
