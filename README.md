@@ -28,31 +28,67 @@ A full-stack Agile Tasks application built with Next.js, MikroORM, MongoDB, and 
 ## Project Structure
 
 ```
-my-app/
-├── components/         # Reusable React components (TodoModal, Layout, etc.)
-├── context/            # React Context definitions (AuthContext)
-├── cypress/            # Cypress E2E tests
-│   └── e2e/            # E2E test specifications
-├── entities/           # MikroORM entity definitions (User, Todo)
-├── lib/                # Utility functions and configurations
-│   ├── auth.ts         # Authentication helpers
-│   ├── axios.ts        # Axios instance configuration
-│   ├── db.ts           # Database connection helper
-│   └── password.ts     # Password hashing utilities
-├── pages/              # Next.js pages and API routes
-│   ├── api/            # API endpoints (/auth, /todos)
-│   ├── _app.tsx        # App wrapper
-│   ├── index.tsx       # Home page (Main Status Board - Kanban)
-│   ├── login.tsx       # Login page
-│   ├── todos.tsx       # Track Status (Table view with filtering)
-│   └── workload.tsx    # Dates by Workload view
-├── public/             # Static assets
-├── scripts/            # Utility scripts (e.g., database seeding)
-├── styles/             # Global styles
-├── .env.development    # Environment variables for development
-├── jest.config.js      # Jest configuration
-├── mikro-orm.config.ts # MikroORM configuration
-└── package.json        # Project dependencies and scripts
+todo-app-nextjs/
+├── __tests__/           # API tests
+│   └── api/
+│       └── todos/
+├── components/          # Reusable React components
+│   ├── __tests__/       # Component tests
+│   ├── AxiosInterceptor.tsx
+│   ├── KanbanBoard.tsx
+│   ├── Layout.tsx
+│   └── TodoModal.tsx
+├── context/             # React Context definitions
+│   ├── AuthContext.tsx
+│   └── ThemeContext.tsx
+├── cypress/             # Cypress E2E tests
+│   ├── e2e/             # E2E test specifications
+│   ├── reports/         # Test reports
+│   ├── screenshots/     # Screenshots from tests
+│   ├── support/         # Cypress support files
+│   └── tsconfig.json
+├── entities/            # MikroORM entity definitions
+│   ├── Todo.ts
+│   └── User.ts
+├── lib/                 # Utility functions and configurations
+│   ├── __tests__/       # Utility tests
+│   ├── auth.ts          # Authentication helpers
+│   ├── axios.ts         # Axios instance configuration
+│   ├── db.ts            # Database connection helper
+│   ├── password.ts      # Password hashing utilities
+│   └── seeder.ts        # Database seeding utilities
+├── pages/               # Next.js pages and API routes
+│   ├── api/             # API endpoints
+│   │   ├── auth/
+│   │   ├── hello.ts
+│   │   ├── todos/
+│   │   └── users/
+│   ├── _app.tsx         # App wrapper
+│   ├── _document.tsx
+│   ├── index.tsx        # Home page (Main Status Board - Kanban)
+│   ├── login.tsx        # Login page
+│   ├── todos.tsx        # Track Status (Table view with filtering)
+│   └── workload.tsx     # Dates by Workload view
+├── public/              # Static assets
+├── scripts/             # Utility scripts
+│   └── seed.ts          # Database seeding script
+├── styles/              # Global styles
+│   ├── globals.css
+│   └── Home.module.css
+├── temp/                # Temporary files
+├── cypress.config.ts    # Cypress configuration
+├── eslint.config.mjs    # ESLint configuration
+├── jest.config.js       # Jest configuration
+├── jest.setup.js        # Jest setup
+├── mikro-orm.config.ts  # MikroORM configuration
+├── next-env.d.ts        # Next.js type definitions
+├── next.config.ts       # Next.js configuration
+├── package.json         # Project dependencies and scripts
+├── pnpm-lock.yaml       # pnpm lock file
+├── pnpm-workspace.yaml  # pnpm workspace configuration
+├── planning instractions.txt  # Planning instructions
+├── README.md            # This file
+└── tsconfig.json        # TypeScript configuration
 ```
 
 ## Getting Started
