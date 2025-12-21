@@ -195,6 +195,10 @@ const KanbanBoard = () => {
                             mb: 2,
                             bgcolor: snapshot.isDragging ? 'action.hover' : '#1e1e1e',
                             color: 'white',
+                            cursor: 'grab',
+                            '&:hover': {
+                              bgcolor: '#2a2a2a', // Lighter background on hover
+                            },
                             ...provided.draggableProps.style,
                           }}
                         >
