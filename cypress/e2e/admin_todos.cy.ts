@@ -1,7 +1,7 @@
 describe('Admin Todos', () => {
   beforeEach(() => {
     // Seed the database
-    cy.request('POST', '/api/auth/seed');
+    // cy.request('POST', '/api/auth/seed');
     cy.visit('/login');
     
     // Login as Admin

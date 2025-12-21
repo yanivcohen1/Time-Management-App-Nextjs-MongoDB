@@ -1,7 +1,7 @@
 describe('Agile Tasks', () => {
   beforeEach(() => {
     // Seed the database
-    cy.request('POST', '/api/auth/seed');
+    // cy.request('POST', '/api/auth/seed');
     cy.visit('/login');
   });
 
@@ -22,7 +22,7 @@ describe('Agile Tasks', () => {
     cy.contains('button', 'Create').click();
 
     // Verify Todo Created
-    cy.contains('New Cypress Todo').should('be.visible');
+    cy.contains('New Cypress Todo').scrollIntoView().should('be.visible');
 
     // Edit Todo (Click on the edit button)
     cy.contains('New Cypress Todo').parent().find('button').click();
@@ -34,6 +34,6 @@ describe('Agile Tasks', () => {
     cy.contains('button', 'Update').click();
 
     // Verify Update
-    cy.contains('Updated Cypress Todo').should('be.visible');
+    cy.contains('Updated Cypress Todo').scrollIntoView().should('be.visible');
   });
 });

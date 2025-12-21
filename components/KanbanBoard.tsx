@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
-import { Box, Card, CardContent, Typography, IconButton, useTheme } from '@mui/material';
+import { Box, Card, CardContent, Typography, IconButton, useTheme, useMediaQuery } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import api from '../lib/axios';
 import TodoModal from './TodoModal';
@@ -32,6 +32,7 @@ const columnColors: Record<string, string> = {
 const KanbanBoard = () => {
   const { selectedUserId } = useAuth();
   const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
   const [todos, setTodos] = useState<Todo[]>([]);
   const [columnsData, setColumnsData] = useState<Record<string, Todo[]>>({
     BACKLOG: [],
@@ -125,9 +126,9 @@ const KanbanBoard = () => {
   };
 
   return (
-    <Box sx={{ 
+    <Box data-testid="kanban-container" sx={{ 
       display: 'flex', 
-      flexDirection: { xs: 'column', md: 'row' },
+      flexDirection: isDesktop ? 'row' : 'column',
       overflowX: { xs: 'hidden', md: 'auto' },
       height: { xs: 'auto', md: 'calc(100vh - 190px)' },
       gap: 2,
