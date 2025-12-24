@@ -12,6 +12,7 @@ import {
   ListItemIcon,
   ListItemText,
   Toolbar,
+  Tooltip,
   Typography,
   useMediaQuery,
   useTheme,
@@ -210,12 +211,16 @@ export default function Layout({ children }: LayoutProps) {
               </Select>
             </FormControl>
           )}
-          <IconButton sx={{ ml: 1 }} onClick={toggleColorMode} color="inherit">
-            {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
-          </IconButton>
-          <IconButton sx={{ ml: 1 }} onClick={logout} color="inherit">
-            <LogoutIcon />
-          </IconButton>
+          <Tooltip title="Toggle theme">
+            <IconButton sx={{ ml: 1 }} onClick={toggleColorMode} color="inherit">
+              {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Logout">
+            <IconButton sx={{ ml: 1 }} onClick={logout} color="inherit">
+              <LogoutIcon />
+            </IconButton>
+          </Tooltip>
         </Toolbar>
       </AppBar>
       <Box
