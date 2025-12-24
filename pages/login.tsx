@@ -29,17 +29,6 @@ export default function Login() {
       setEmail('user@todo.dev');
       setPassword('ChangeMe123!');
     }
-    // Auto submit after state update? 
-    // State update is async, so better to call api directly or use effect.
-    // I'll just set state and let user click or call api directly with values.
-    // Calling api directly is better UX.
-    api.post('/auth/login', {
-      email: role === 'admin' ? 'admin@todo.dev' : 'user@todo.dev',
-      password: 'ChangeMe123!'
-    }).then(res => {
-      login(res.data.token, res.data.user);
-      enqueueSnackbar(`Logged in as Demo ${role === 'admin' ? 'Admin' : 'User'}`, { variant: 'success' });
-    }).catch(() => {});
   };
 
   const handleSeed = async () => {
