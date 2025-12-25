@@ -100,7 +100,7 @@ export default function Layout({ children }: LayoutProps) {
         <ListItem disablePadding>
           <ListItemButton 
             onClick={() => handleNavigation('/workload')}
-            selected={router.pathname === '/workload'}
+            selected={router.pathname === '/workload' || router.pathname === '/'}
             sx={listItemSx}
           >
             <ListItemIcon>
@@ -139,8 +139,8 @@ export default function Layout({ children }: LayoutProps) {
         <ListSubheader>Agile menu</ListSubheader>
         <ListItem disablePadding>
           <ListItemButton 
-            onClick={() => handleNavigation('/')}
-            selected={router.pathname === '/'}
+            onClick={() => handleNavigation('/board')}
+            selected={router.pathname === '/board'}
             sx={listItemSx}
           >
             <ListItemIcon>
