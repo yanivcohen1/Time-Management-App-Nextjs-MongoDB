@@ -1,19 +1,24 @@
-import { defineConfig } from "cypress";
+import { defineConfig } from 'cypress'
 
 export default defineConfig({
-  reporter: 'cypress-mochawesome-reporter',
-  reporterOptions: {
-    charts: true,
-    reportPageTitle: 'Agile Tasks E2E Test Report',
-    embeddedScreenshots: true,
-    inlineAssets: true,
-    saveAllAttempts: false,
-  },
-  e2e: {
+   e2e: {
     baseUrl: 'http://localhost:3001',
-    setupNodeEvents(on) {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      require('cypress-mochawesome-reporter/plugin')(on);
+    supportFile: false,
+    reporter: process.env.CYPRESS_REPORTER || 'spec',
+    reporterOptions: {
+      reportDir: 'cypress/reports',
+      overwrite: true,
+      html: true,
+      json: false
+    },
+    async setupNodeEvents(on, config) {
+      if (process.env.CYPRESS_REPORTER === 'cypress-mochawesome-reporter') {
+        // @ts-expect-error ignore ts error for dynamic import
+        const plugin = await import('cypress-mochawesome-reporter/plugin');
+        plugin.default(on);
+      }
+      // implement node event listeners here
+      return config;
     },
   },
-});
+})

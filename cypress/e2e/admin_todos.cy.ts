@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 describe('Admin Todos', () => {
   beforeEach(() => {
     // Seed the database

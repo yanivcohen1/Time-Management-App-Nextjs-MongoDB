@@ -18,15 +18,7 @@
     "paths": {
       "@/*": ["./*"]
     },
-    "types": ["jest", "@testing-library/jest-dom"]
+    "types": ["jest", "@testing-library/jest-dom", "cypress"]
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
-    "**/*.mts"
-  ],
-  "exclude": ["node_modules", "cypress", "**/__tests__", "**/*.test.ts", "**/*.test.tsx"]
+  "exclude": ["node_modules", "cypress/**", "**/__tests__", "**/*.test.ts", "**/*.test.tsx"]
 }
