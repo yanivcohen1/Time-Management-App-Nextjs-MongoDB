@@ -11,7 +11,6 @@ describe('Responsive Kanban Board', () => {
 
   it('should display columns in a row on desktop', () => {
     cy.viewport(1280, 720);
-    cy.wait(500); // Wait for styles to apply
     cy.get('[data-testid="kanban-container"]').should('have.css', 'flex-direction', 'row');
   });
 
