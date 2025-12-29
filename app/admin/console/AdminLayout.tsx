@@ -8,7 +8,7 @@ import { MenuItem } from "primereact/menuitem";
 import { AdminOverviewCard } from "./[adminId]/AdminOverviewCard";
 import { UserOverviewCard } from "./[adminId]/user/[userId]/UserOverviewCard";
 import { AdminProvider } from "./_components/AdminContext";
-import Layout from "@/components/Layout";
+import Layout from "@/components/SideMenu";
 
 type AdminSwitchContextValue = {
   interWorkspaceEnabled: boolean;

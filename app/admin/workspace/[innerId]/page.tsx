@@ -3,7 +3,7 @@
 import { Paper, Stack, Typography, Box } from "@mui/material";
 import { useParams, useSearchParams } from "next/navigation";
 import { InterWorkspaceSection } from "../_components/InterWorkspaceSection";
-import Layout from "../../../../components/Layout";
+import Layout from "../../../../components/SideMenu";
 
 const formatQueryValue = (value: string | null) => value ?? "Not provided";
 

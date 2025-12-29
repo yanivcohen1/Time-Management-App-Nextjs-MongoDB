@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import Layout from '../../components/Layout';
+import Layout from '../../components/SideMenu';
 import { useAuth } from '../../context/AuthContext';
 import { useRouter } from 'next/navigation';
 import api from '../../lib/axios';
