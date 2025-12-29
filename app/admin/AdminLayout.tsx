@@ -1,14 +1,14 @@
 "use client";
 
 import { createContext, useContext, useState, useMemo, ReactNode } from "react";
-import { Box, Button, CircularProgress, FormControlLabel, Paper, Stack, Switch, Typography } from "@mui/material";
+import { Box, FormControlLabel, Paper, Stack, Switch, Typography } from "@mui/material";
 import { usePathname, useRouter, useParams, useSearchParams } from "next/navigation";
 import { BreadCrumb } from "primereact/breadcrumb";
 import { MenuItem } from "primereact/menuitem";
-import { tokenStorage } from "@/lib/http/token-storage";
 import { AdminOverviewCard } from "./[adminId]/AdminOverviewCard";
 import { UserOverviewCard } from "./[adminId]/user/[userId]/UserOverviewCard";
 import { AdminProvider } from "./_components/AdminContext";
+import Layout from "../../components/Layout";
 
 type AdminSwitchContextValue = {
   interWorkspaceEnabled: boolean;
@@ -44,7 +44,6 @@ export function AdminLayout({ children }: { children: ReactNode }) {
   const queryId = getQueryValue("id");
   const queryName = getQueryValue("name");
 
-  const hasToken = !!tokenStorage.getAccessToken();
   const [activeView, setActiveView] = useState<"admin" | "user">(() => (pathname?.includes("/user/") ? "user" : "admin"));
   const resolvedActiveView = pathname?.startsWith("/admin") ? (pathname.includes("/user/") ? "user" : "admin") : activeView;
   const transitionKey = pathname ?? resolvedActiveView ?? "admin";
@@ -87,62 +86,58 @@ export function AdminLayout({ children }: { children: ReactNode }) {
 
   return (
     <AdminSwitchContext.Provider value={{ interWorkspaceEnabled, setInterWorkspaceEnabled: handleInterWorkspaceToggle }}>
-      <main>
-        <Box sx={{ px: { xs: 2, md: 6 }, py: 6 }}>
-          <Stack spacing={3}>
-            <Paper sx={{ p: 2, borderRadius: 3 }}>
-              <BreadCrumb home={home} model={breadcrumbItems} />
-            </Paper>
-            <Stack
-              direction={{ xs: "column", md: "row" }}
-              alignItems={{ xs: "flex-start", md: "center" }}
-              justifyContent="space-between"
-              spacing={2}
-            >
-              <Stack spacing={1}>
-                <Typography variant="h3" fontWeight={700}>
-                  Admin console
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  Manage roles, enforce rate limits, and review access logs across the workspace.
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Currently viewing: {resolvedActiveView === "admin" ? "Admin overview" : "User details"}
-                </Typography>
-              </Stack>
-
-              <FormControlLabel
-                control={
-                  <Switch
-                    key={`${transitionKey}-${interWorkspaceEnabled ? "on" : "off"}`}
-                    color="primary"
-                    checked={interWorkspaceEnabled}
-                    onChange={(_, checked) => handleInterWorkspaceToggle(checked)}
-                  />
-                }
-                label={interWorkspaceEnabled ? "User workspace enabled" : "User workspace disabled"}
+      <Layout>
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold', mb: 1 }}>
+            Admin console
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            Manage roles, enforce rate limits, and review access logs across the workspace.
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Currently viewing: {resolvedActiveView === "admin" ? "Admin overview" : "User details"}
+          </Typography>
+        </Box>
+        <Paper sx={{ p: 2, borderRadius: 3, mb: 3 }}>
+          <BreadCrumb home={home} model={breadcrumbItems} />
+        </Paper>
+        <Stack
+          direction={{ xs: "column", md: "row" }}
+          alignItems={{ xs: "flex-start", md: "center" }}
+          justifyContent="space-between"
+          spacing={2}
+          sx={{ mb: 3 }}
+        >
+          <FormControlLabel
+            control={
+              <Switch
+                key={`${transitionKey}-${interWorkspaceEnabled ? "on" : "off"}`}
+                color="primary"
+                checked={interWorkspaceEnabled}
+                onChange={(_, checked) => handleInterWorkspaceToggle(checked)}
               />
-            </Stack>
-            <Stack spacing={3}>
-              {children}
-              {adminId ? (
-                <AdminProvider adminId={adminId}>
-                  <AdminOverviewCard adminId={adminId} key={adminId}/>
-                  {userId ? (
-                    <>
-                      <UserOverviewCard userId={userId} queryId={queryId} queryName={queryName} />
-                    </>
-                  ) : (
-                    <></>
-                  )}
-                </AdminProvider>
+            }
+            label={interWorkspaceEnabled ? "User workspace enabled" : "User workspace disabled"}
+          />
+        </Stack>
+        <Stack spacing={3}>
+          {children}
+          {adminId ? (
+            <AdminProvider adminId={adminId}>
+              <AdminOverviewCard adminId={adminId} key={adminId}/>
+              {userId ? (
+                <>
+                  <UserOverviewCard userId={userId} queryId={queryId} queryName={queryName} />
+                </>
               ) : (
                 <></>
               )}
-            </Stack>
-          </Stack>
-        </Box>
-      </main>
+            </AdminProvider>
+          ) : (
+            <></>
+          )}
+        </Stack>
+      </Layout>
     </AdminSwitchContext.Provider>
   );
 }
