@@ -6,7 +6,7 @@ import api from '../../lib/axios';
 
 // Mock dependencies
 jest.mock('../../lib/axios');
-jest.mock('next/router', () => ({
+jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: jest.fn(),
     reload: jest.fn(),
