@@ -1,13 +1,10 @@
 import { expect, describe, it, beforeEach } from '@jest/globals';
 // import handler from '../../../pages/api/todos/[id]';
 import { isAuthenticated } from '../../../lib/auth';
-import { getORM } from '../../../lib/db';
 
 jest.mock('../../../lib/auth');
 jest.mock('../../../lib/db', () => ({
   getORM: jest.fn(),
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  withORM: (handler: any) => handler,
 }));
 jest.mock('../../../entities/Todo', () => ({
   Todo: class {},

@@ -43,4 +43,19 @@ describe('Agile Tasks', () => {
     // Verify Update
     cy.contains('Updated Cypress Todo').scrollIntoView().should('be.visible');
   });
+
+  it('should handle GET /api/todos?limit=1000 without error', () => {
+    // Login first to get authenticated
+    cy.get('input[name="email"]').type('user@todo.dev');
+    cy.get('input[name="password"]').type('ChangeMe123!');
+    cy.get('button[type="submit"]').click();
+
+    // Test the API endpoint
+    cy.request('GET', '/api/todos?limit=1000').then((response) => {
+      expect(response.status).to.eq(200);
+      expect(response.body).to.have.property('items');
+      expect(response.body).to.have.property('total');
+      expect(response.body.items).to.be.an('array');
+    });
+  });
 });

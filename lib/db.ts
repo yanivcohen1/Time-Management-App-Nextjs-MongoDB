@@ -1,7 +1,7 @@
 import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { MongoDriver, MongoEntityManager } from '@mikro-orm/mongodb';
 import config from '../mikro-orm.config';
-import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import { handleError } from "@/lib/http";
 
 // Global cache to prevent multiple connections in dev
@@ -14,15 +14,14 @@ export const getORM = async () => {
   return globalForORM.orm;
 };
 
-export const withORM = (handler: NextApiHandler) => async (req: NextApiRequest, res: NextApiResponse) => {
-  const orm = await getORM();
-  return RequestContext.create(orm.em, async () => {
+type AppRouterHandler = (req: NextRequest) => NextResponse | Response | Promise<NextResponse> | Promise<Response>;
+
+export const withORM = (handler: AppRouterHandler) => async (req: NextRequest) => {
     try {
-      return await handler(req, res);
+      return await handler(req);
     } catch (error) {
-    return await handleError(error, res);
-  }
-  });
+      return await handleError(error);
+    }
 };
 
 export type EntityManager = MongoEntityManager;
