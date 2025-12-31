@@ -33,7 +33,7 @@ export default function Login() {
       setPassword('ChangeMe123!');
     }
     // Auto login after setting credentials
-    setTimeout(() => handleLogin(), 100);
+    // setTimeout(() => handleLogin(), 100);
   };
 
   const handleSeed = async () => {
