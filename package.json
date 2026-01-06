@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "tsc --noEmit && npx tsc --noEmit --project cypress/tsconfig.json && eslint . --ext .ts,.tsx --max-warnings=1",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "test:e2e": "cypress run",
     "test:e2e:report": "rimraf cypress/reports && cypress run",
     "seed": "ts-node -O \"{\\\"module\\\":\\\"commonjs\\\"}\" scripts/seed.ts"
