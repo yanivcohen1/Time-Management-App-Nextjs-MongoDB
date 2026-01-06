@@ -8,7 +8,8 @@ import { ObjectId } from '@mikro-orm/mongodb';
 jest.mock('../../../lib/auth');
 jest.mock('../../../lib/db', () => ({
   getORM: jest.fn(),
-  withORM: (handler: any) => handler,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  handleError: (handler: any) => handler,
 }));
 jest.mock('@mikro-orm/core', () => {
   const actual = jest.requireActual('@mikro-orm/core');

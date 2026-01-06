@@ -9,7 +9,7 @@ jest.mock('../../../lib/auth');
 jest.mock('../../../lib/db', () => ({
   getORM: jest.fn(),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  withORM: (handler: any) => handler,
+  handleError: (handler: any) => handler,
 }));
 jest.mock('@mikro-orm/core', () => {
   const actual = jest.requireActual('@mikro-orm/core');
