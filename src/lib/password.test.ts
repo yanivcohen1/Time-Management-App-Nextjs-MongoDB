@@ -1,4 +1,5 @@
-import { hashPassword, comparePassword } from '../password';
+import { expect, describe, it } from '@jest/globals';
+import { hashPassword, comparePassword } from './password';
 
 describe('Password Utils', () => {
   it('should hash a password and verify it', async () => {

@@ -1,0 +1,4 @@
+
+> my-app@0.1.0 lint D:\Temp\todo-app-nextjs
+> tsc --noEmit && npx tsc --noEmit --project cypress/tsconfig.json && eslint . --ext .ts,.tsx --max-warnings=1
+

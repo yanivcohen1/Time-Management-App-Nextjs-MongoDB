@@ -26,10 +26,10 @@ const customJestConfig = {
       testPathIgnorePatterns: [
         '<rootDir>/.next/',
         '<rootDir>/node_modules/',
-        '<rootDir>/__tests__/api',
+        '<rootDir>/src/app/api',
       ],
       transform: {
-        '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
+        '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: [['next/babel', { 'preset-react': { runtime: 'automatic' } }]] }],
       },
       transformIgnorePatterns: [
         '/node_modules/(?!bson|mongodb|@mikro-orm)/',
@@ -38,7 +38,7 @@ const customJestConfig = {
     {
       displayName: 'api',
       testEnvironment: 'node',
-      testMatch: ['<rootDir>/__tests__/api/**/*.test.ts'],
+      testMatch: ['<rootDir>/src/app/api/**/*.test.ts'],
       testPathIgnorePatterns: [
         '<rootDir>/.next/',
         '<rootDir>/node_modules/',

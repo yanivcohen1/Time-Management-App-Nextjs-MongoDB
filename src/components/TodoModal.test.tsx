@@ -1,11 +1,12 @@
+import { expect, describe, it, beforeEach, jest } from '@jest/globals';
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import TodoModal from '../TodoModal';
-import api from '../../lib/axios';
+import '@testing-library/jest-dom/jest-globals';
+import TodoModal from './TodoModal';
+import api from '../lib/axios';
 
 // Mock dependencies
-jest.mock('../../lib/axios');
+jest.mock('../lib/axios');
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: jest.fn(),
@@ -41,7 +42,8 @@ describe('TodoModal', () => {
   });
 
   it('submits the form correctly', async () => {
-    (api.post as jest.Mock).mockResolvedValue({ data: {} });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    jest.mocked(api.post).mockResolvedValue({ data: {} } as any);
 
     render(
       <TodoModal

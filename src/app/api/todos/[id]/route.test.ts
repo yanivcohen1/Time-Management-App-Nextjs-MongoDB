@@ -1,12 +1,12 @@
 import { expect, describe, it, beforeEach } from '@jest/globals';
 import { NextRequest } from 'next/server';
-import { PUT, DELETE } from '../../../src/app/api/todos/[id]/route';
-import { isAuthenticatedApp } from '../../../src/lib/auth';
-import { getORM } from '../../../src/lib/db';
+import { PUT, DELETE } from './route';
+import { isAuthenticatedApp } from '@/lib/auth';
+import { getORM } from '@/lib/db';
 import { ObjectId } from '@mikro-orm/mongodb';
 
-jest.mock('../../../src/lib/auth');
-jest.mock('../../../src/lib/db', () => ({
+jest.mock('@/lib/auth');
+jest.mock('@/lib/db', () => ({
   getORM: jest.fn(),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handleError: (handler: any) => handler,
@@ -18,8 +18,14 @@ jest.mock('@mikro-orm/core', () => {
     serialize: jest.fn((obj) => obj),
   };
 });
-jest.mock('../../../src/entities/Todo', () => ({
+jest.mock('@/entities/Todo', () => ({
   Todo: class {},
+  TodoStatus: {
+    BACKLOG: 'BACKLOG',
+    PENDING: 'PENDING',
+    IN_PROGRESS: 'IN_PROGRESS',
+    COMPLETED: 'COMPLETED',
+  },
 }));
 
 describe('/api/todos/[id]', () => {
@@ -97,5 +103,44 @@ describe('/api/todos/[id]', () => {
       { _id: new ObjectId(todoId), owner: new ObjectId(validUserId) }
     );
     expect(mockRemoveAndFlush).toHaveBeenCalled();
+  });
+
+  it('DELETE removes todo for admin', async () => {
+    (isAuthenticatedApp as jest.Mock).mockReturnValue({ userId: validUserId, role: 'admin' });
+    const request = new NextRequest('http://localhost/api/todos/todo-123', {
+      method: 'DELETE',
+    });
+
+    mockFindOne.mockResolvedValue({ id: todoId, title: 'Admin Task' });
+
+    const response = await DELETE(request, { params: Promise.resolve({ id: todoId }) });
+
+    expect(response.status).toBe(200);
+    expect(mockFindOne).toHaveBeenCalledWith(
+      expect.anything(),
+      { _id: new ObjectId(todoId) }
+    );
+    expect(mockRemoveAndFlush).toHaveBeenCalled();
+  });
+
+  it('PUT returns 404 if todo not found', async () => {
+    const request = new NextRequest('http://localhost/api/todos/non-existent', {
+      method: 'PUT',
+      body: JSON.stringify({ title: 'New' }),
+    });
+
+    mockFindOne.mockResolvedValue(null);
+
+    await expect(PUT(request, { params: Promise.resolve({ id: '507f1f77bcf86cd799439013' }) })).rejects.toThrow('Todo not found');
+  });
+
+  it('DELETE returns 404 if todo not found', async () => {
+    const request = new NextRequest('http://localhost/api/todos/non-existent', {
+      method: 'DELETE',
+    });
+
+    mockFindOne.mockResolvedValue(null);
+
+    await expect(DELETE(request, { params: Promise.resolve({ id: '507f1f77bcf86cd799439013' }) })).rejects.toThrow('Todo not found');
   });
 });
