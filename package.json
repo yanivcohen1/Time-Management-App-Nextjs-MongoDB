@@ -10,7 +10,7 @@
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:e2e": "cypress run --e2e --browser chrome",
-    "test:e2e:report": "rimraf cypress/reports && cypress run --e2e --browser chrome",
+    "test:e2e:report": "cross-env CYPRESS_REPORTER=cypress-mochawesome-reporter cypress run --e2e --browser chrome",
     "seed:db": "ts-node -O \"{\\\"module\\\":\\\"commonjs\\\"}\" scripts/seed.ts",
     "mikro-orm:create": "mikro-orm migration:create",
     "docker-compose:up": "docker-compose up --build",
