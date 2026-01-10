@@ -1,7 +1,7 @@
 import { Entity, PrimaryKey, Property, SerializedPrimaryKey, Unique } from '@mikro-orm/core';
 import { ObjectId } from '@mikro-orm/mongodb';
 
-@Entity()
+@Entity({ collection: 'user' })
 export class User {
 
   @PrimaryKey()

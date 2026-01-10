@@ -16,11 +16,13 @@ export async function handlerPOST(request: NextRequest) {
     const em = orm.em.fork();
 
     const user = await em.findOne(User, { email });
+    
     if (!user) {
       return Response.json({ message: 'Invalid credentials' }, { status: 401 });
     }
 
     const isValidPassword = await comparePassword(password, user.password);
+
     if (!isValidPassword) {
       return Response.json({ message: 'Invalid credentials' }, { status: 401 });
     }

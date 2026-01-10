@@ -6,10 +6,9 @@ import { ReflectMetadataProvider } from '@mikro-orm/core';
 
 export default defineConfig({
   entities: [User, Todo],
-  dbName: 'next-todo-app',
-  clientUrl: process.env.DATABASE_URL,
+  clientUrl: process.env.DATABASE_URL || 'mongodb://localhost:27017/next-todo-app',
   metadataProvider: ReflectMetadataProvider,
-  debug: process.env.NODE_ENV !== 'production',
+  debug: false,
   migrations: {
     path: './migrations',
     pathTs: './migrations',

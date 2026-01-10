@@ -9,7 +9,7 @@ export enum TodoStatus {
   COMPLETED = 'COMPLETED',
 }
 
-@Entity()
+@Entity({ collection: 'todo' })
 export class Todo {
 
   @PrimaryKey()

@@ -95,9 +95,39 @@ todo-app-nextjs/
 
 ### Prerequisites
 
-*   Node.js (v18+ recommended)
-*   pnpm
-*   MongoDB instance (local or Atlas)
+*   [Node.js](https://nodejs.org/) (v18+ recommended)
+*   [pnpm](https://pnpm.io/)
+*   [Docker](https://www.docker.com/) & [Docker Compose](https://docs.docker.com/compose/)
+*   MongoDB instance (required only if running without Docker)
+
+---
+
+## Running with Docker (Recommended)
+
+The easiest way to run the application is using Docker Compose. This will set up the Next.js app, a MongoDB database, and automatically seed initial data.
+
+1.  **Start the application**:
+    ```powershell
+    docker-compose up --build
+    ```
+2.  **Access the application**:
+    Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### Default Credentials
+The database is automatically seeded with the following users:
+*   **User**: `user@todo.dev` / `ChangeMe123!`
+*   **Admin**: `admin@todo.dev` / `ChangeMe123!`
+
+### Resetting the Database
+To clear the database and re-run the seeder:
+```powershell
+docker-compose down -v
+docker-compose up --build
+```
+
+---
+
+## Running Locally
 
 ### Installation
 
@@ -162,8 +192,10 @@ pnpm lint
 | `pnpm test` | Runs unit and integration tests using Jest. |
 | `pnpm test:e2e` | Runs end-to-end tests using Cypress (headless mode). |
 | `pnpm seed` | Seeds the database with initial data. |
-| `pnpm docker` | To start the application and the database together
-| `mikro-orm:create` | To create a migration (e.g., for data seeding or manual schema changes)
+| `pnpm docker-compose:up` | Starts the application and database with Docker Compose. |
+| `pnpm docker-compose:down` | Stops the Docker containers and removes volumes. |
+| `pnpm docker-compose:seed` | Manually triggers the database seeder container. |
+| `pnpm mikro-orm:create` | Creates a new migration file in `./migrations`. |
 
 ## Main Page
 

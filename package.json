@@ -11,9 +11,11 @@
     "test:coverage": "jest --coverage",
     "test:e2e": "cypress run --e2e --browser chrome",
     "test:e2e:report": "rimraf cypress/reports && cypress run --e2e --browser chrome",
-    "seed": "ts-node -O \"{\\\"module\\\":\\\"commonjs\\\"}\" scripts/seed.ts",
+    "seed:db": "ts-node -O \"{\\\"module\\\":\\\"commonjs\\\"}\" scripts/seed.ts",
     "mikro-orm:create": "mikro-orm migration:create",
-    "docker": "docker-compose up --build"
+    "docker-compose:up": "docker-compose up --build",
+    "docker-compose:down": "docker-compose down",
+    "docker-compose:seed": "docker-compose run --rm seed"
   },
   "mikro-orm": {
     "useTsNode": true,
