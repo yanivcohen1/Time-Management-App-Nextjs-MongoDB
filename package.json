@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "tsc --noEmit && npx tsc --noEmit --project cypress/tsconfig.json && eslint . --ext .ts,.tsx --max-warnings=1",
+    "lint": "tsc --noEmit && tsc --noEmit --project cypress/tsconfig.json && eslint . --ext .ts,.tsx --max-warnings=1",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:e2e": "cypress run --e2e --browser chrome",
