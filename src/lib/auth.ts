@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { NextRequest } from 'next/server';
+import { ApiError } from "@/lib/http"
 
 const SECRET = process.env.JWT_ACCESS_SECRET || 'secret';
 const TTL = parseInt(process.env.JWT_ACCESS_TTL_SECONDS || '3600', 10);
@@ -55,10 +56,12 @@ export const getAuthTokenApp = (request: NextRequest) => {
 export const isAuthenticatedApp = (request: NextRequest) => {
   const token = getAuthTokenApp(request);
   if (!token) {
+    throw new ApiError(401, 'Unauthorized');
     return null;
   }
   const payload = verifyToken(token);
   if (!payload) {
+    throw new ApiError(401, 'Unauthorized');
     return null;
   }
   return payload;
