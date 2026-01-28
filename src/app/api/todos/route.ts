@@ -8,7 +8,7 @@ import { FilterQuery, serialize } from '@mikro-orm/core';
 import { ApiError } from "@/lib/http"
 
 async function handlerGET(request: NextRequest) {
-  const userPayload = isAuthenticatedApp(request);
+  const userPayload = await isAuthenticatedApp();
   if (!userPayload) 
     // return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     throw new ApiError(401, 'Unauthorized');
@@ -41,7 +41,7 @@ async function handlerGET(request: NextRequest) {
   const offset = pageNum * limitNum;
 
   if (userPayload.role === 'admin') {
-    isAdmin(request);
+    await isAdmin();
     if (userId) {
       filter.owner = new ObjectId(userId);
     }
@@ -100,7 +100,7 @@ async function handlerGET(request: NextRequest) {
 }
 
 async function handlerPOST(request: NextRequest) {
-  const userPayload = isAuthenticatedApp(request);
+  const userPayload = await isAuthenticatedApp();
   if (!userPayload) 
     throw new ApiError(401, 'Unauthorized');
     //return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });

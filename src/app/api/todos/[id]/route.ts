@@ -8,7 +8,7 @@ import { ObjectId } from '@mikro-orm/mongodb';
 
 export async function handlerPUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const userPayload = isAuthenticatedApp(request);
+  const userPayload = await isAuthenticatedApp();
   if (!userPayload) throw new ApiError(401, 'Unauthorized');
 
   const orm = await getORM();
@@ -49,7 +49,7 @@ export async function handlerPUT(request: NextRequest, { params }: { params: Pro
 
 export async function handlerDELETE(request: NextRequest, context : { params: Promise<{ id: string }> }) {
   const { id } = await context.params;
-  const userPayload = isAuthenticatedApp(request);
+  const userPayload = await isAuthenticatedApp();
   if (!userPayload) throw new ApiError(401, 'Unauthorized');
 
   const orm = await getORM();

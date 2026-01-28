@@ -4,7 +4,7 @@ import { User } from '@/entities/User';
 import { isAuthenticatedApp } from '@/lib/auth';
 
 async function handlerGET(request: NextRequest) {
-  const userPayload = isAuthenticatedApp(request);
+  const userPayload = await isAuthenticatedApp();
   if (!userPayload) return Response.json({ message: 'Unauthorized' }, { status: 401 });
 
   // Only admins can list all users

@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { NextRequest } from 'next/server';
-import { ApiError } from "@/lib/http"
+import { ApiError } from "@/lib/http";
+import { headers } from 'next/headers';
 
 const SECRET = process.env.JWT_ACCESS_SECRET || 'secret';
 const TTL = parseInt(process.env.JWT_ACCESS_TTL_SECONDS || '3600', 10);
@@ -45,16 +46,17 @@ export const isAuthenticated = (req: NextApiRequest, res: NextApiResponse) => {
   return payload;
 };
 
-export const getAuthTokenApp = (request: NextRequest) => {
-  const authHeader = request.headers.get('authorization');
+export const getAuthTokenApp = async () => {
+  const headersList = await headers()
+  const authHeader = headersList.get('authorization');
   if (authHeader && authHeader.startsWith('Bearer ')) {
     return authHeader.substring(7);
   }
   return null;
 };
 
-export const isAuthenticatedApp = (request: NextRequest) => {
-  const token = getAuthTokenApp(request);
+export const isAuthenticatedApp = async () => {
+  const token = await getAuthTokenApp();
   if (!token) {
     throw new ApiError(401, 'Unauthorized');
   }
@@ -65,8 +67,8 @@ export const isAuthenticatedApp = (request: NextRequest) => {
   return payload;
 };
 
-export const isAdmin = (request: NextRequest) => {
-  const payload = isAuthenticatedApp(request);
+export const isAdmin = async () => {
+  const payload = await isAuthenticatedApp();
   if (payload?.role !== 'admin') {
     throw new ApiError(403, 'Forbidden admin access only');
   }
