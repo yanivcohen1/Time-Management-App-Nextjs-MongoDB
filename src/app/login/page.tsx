@@ -6,6 +6,7 @@ import api from '../../lib/axios';
 import { useAuth } from '../../context/AuthContext';
 import { useSnackbar } from 'notistack';
 import Link from 'next/link';
+import {userResponse} from '@/app/api/auth/login/route';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -17,7 +18,8 @@ export default function Login() {
     if (e) e.preventDefault();
     try {
       const res = await api.post('/auth/login', { email, password });
-      login(res.data.token, res.data.user);
+      const user: userResponse = res.data;
+      login(user.token, user.user);
       enqueueSnackbar('Login successful', { variant: 'success' });
     } catch {
       // Handled by interceptor
