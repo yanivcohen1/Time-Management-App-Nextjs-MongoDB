@@ -34,7 +34,7 @@ export interface todosGetResponse {
   total: number;
 }
 
-export interface todosPostParams {
+export interface todosPostBody {
   title: string;
   description?: string;
   dueTime?: string | Date;
@@ -63,15 +63,17 @@ async function handlerGET(request: NextRequest) {
 
   const { searchParams } = new URL(request.url);
   const filter: FilterQuery<Todo> = {};
-  const userId = searchParams.get('userId');
-  const status = searchParams.get('status');
-  const title = searchParams.get('title');
-  const startDate = searchParams.get('startDate');
-  const endDate = searchParams.get('endDate');
-  const page = searchParams.get('page');
-  const limit = searchParams.get('limit');
-  const orderBy = searchParams.get('orderBy');
-  const order = searchParams.get('order');
+  const params = Object.fromEntries(searchParams.entries()) as unknown as todosGetParams;
+  const { userId, status, title, startDate, endDate, page, limit, orderBy, order } = params;
+  // const userId = searchParams.get('userId');
+  // const status = searchParams.get('status');
+  // const title = searchParams.get('title');
+  // const startDate = searchParams.get('startDate');
+  // const endDate = searchParams.get('endDate');
+  // const page = searchParams.get('page');
+  // const limit = searchParams.get('limit');
+  // const orderBy = searchParams.get('orderBy');
+  // const order = searchParams.get('order');
 
   const pageNum = page ? parseInt(page, 10) : 0;
   const limitNum = limit ? parseInt(limit, 10) : 10;
@@ -141,7 +143,7 @@ async function handlerGET(request: NextRequest) {
 
   const serializedTodos = todos.map(todo => serialize(todo));
 
-  return NextResponse.json({ items: serializedTodos, total: count });
+  return NextResponse.json({ items: serializedTodos, total: count } as unknown as todosGetResponse);
 }
 
 async function handlerPOST(request: NextRequest) {
@@ -153,7 +155,7 @@ async function handlerPOST(request: NextRequest) {
   const orm = await getORM();
   const em = orm.em.fork();
 
-  const { title, description, dueTime, status, duration } = await request.json() as todosPostParams;
+  const { title, description, dueTime, status, duration } = await request.json() as todosPostBody;
   if (!title) {
     throw new ApiError(400, 'Title is required');
   }
