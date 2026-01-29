@@ -11,19 +11,19 @@ interface user {
         role: User["role"],
       }
 
-export interface postResponse{
+export interface loginPostResponse{
         token: string,
         user: user,
       }
 
-export interface postParams{
+export interface loginPostParams{
         email: string,
         password: string,
       }
 
 export async function handlerPOST(request: NextRequest) {
   try {
-    const { email, password } = await request.json() as postParams;
+    const { email, password } = await request.json() as loginPostParams;
 
     if (!email || !password) {
       return Response.json({ message: 'Email and password are required' }, { status: 400 });
@@ -54,7 +54,7 @@ export async function handlerPOST(request: NextRequest) {
           email: user.email,
           role: user.role,
         },
-      } as postResponse);
+      } as loginPostResponse);
   } catch (error) {
     console.error('Login error:', error);
     return Response.json({ message: 'Internal server error' }, { status: 500 });
